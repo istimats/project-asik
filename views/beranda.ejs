@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OceanCare</title>
+  <link rel="shortcut icon" href="/gambar/oceancare.png" type="image/x-icon">
+  <link rel="stylesheet" href="/beranda.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <script type="text/javascript" src="/datakapalbentang.js"></script>
+</head>
+<body>
+  <!-- Header and other HTML remains the same until the script section -->
+  <%- include('../template/header.ejs') %>
+  <%- include('../template/profil.ejs') %>
+
+
+  <main class="dashboard">
+    <!-- Panel Informasi Utama -->
+    <div class="info-panels">
+      <div class="info-card weather" id="weatherCard">
+        <h3><i class="fas fa-cloud"></i> Kondisi Cuaca</h3>
+        <div class="weather-details">
+          <div class="weather-main">
+            <span class="temp">Loading...</span><br>
+            <span class="city">Loading...</span>
+            <span class="condition">Memuat data cuaca...</span>
+          </div>
+          <div class="weather-stats">
+            <div class="stat wind-speed">
+              <i class="fas fa-wind"></i>
+              <span>-- knot</span>
+            </div>
+           
+            <div class="stat wind-direction">
+              <i class="fas fa-compass"></i>
+              <span>--</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-card ocean-conditions">
+        <h3><i class="fas fa-water"></i> Kondisi Laut</h3>
+        <% if (typeof oceanData === 'object' && oceanData !== null) { %>
+            <div class="ocean-stats">
+                <div class="stat">
+                    <span class="label">Suhu Air</span>
+                    <span class="value"><%= oceanData.temperature %>°C</span>
+                </div>
+                <div class="stat">
+                    <span class="label">pH Air</span>
+                    <span class="value"><%= oceanData.ph %></span>
+                </div>
+                <div class="stat">
+                    <span class="label">Salinitas</span>
+                    <span class="value"><%= oceanData.salinity %> ppt</span>
+                </div>
+            </div>
+
+            <!-- Detail Parameter Laut -->
+            <div class="ocean-parameters-section">
+                <h4>Detail Parameter Laut</h4>
+                <div class="parameters-grid">
+                    <% Object.entries(oceanData.parameters).forEach(([key, param]) => { %>
+                        <div class="parameter-item" style="border-left: 4px solid <%= param.color %>;">
+                            <h6><%= key.charAt(0).toUpperCase() + key.slice(1) %></h6>
+                            <p><%= param.value %> <%= param.unit %></p>
+                            <span class="quality"><%= param.qualification %></span>
+                            <small class="description"><%= param.description %></small>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% } else { %>
+            <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                Data kondisi laut tidak tersedia
+            </div>
+        <% } %>
+      </div>
+    </div>
+
+    <!-- Rest of the HTML structure remains the same -->
+    
+      <h2>Peta Persebaran Kapal</h2>
+    <section class="map-section">
+      <div class="map-container">
+        <div id="map"></div>
+        <div class="map-controls">
+          
+          <button class="control-btn" onclick="toggleLayer('weather')">
+            <i class="fas fa-cloud"></i> Cuaca
+          </button>
+          
+          <button class="control-btn" onclick="changeMapLayer('streets')">
+            <i class="fas fa-road"></i> Streets
+          </button>
+          <button class="control-btn" onclick="changeMapLayer('hybrid')">
+            <i class="fas fa-satellite"></i> Hybrid
+          </button>
+          <button class="control-btn" onclick="changeMapLayer('terrain')">
+            <i class="fas fa-mountain"></i> Topografi
+          </button>
+        </div>
+      </div>
+    </section>
+      
+       
+    </div>
+
+    <section class="alerts-section">
+      <h2>Peringatan & Rekomendasi</h2>
+      <div class="alerts-container">
+        <div class="alert warning">
+          <i class="fas fa-exclamation-triangle"></i>
+          <div class="alert-content">
+            <h4>Peringatan Cuaca</h4>
+            <p>Gelombang tinggi diprediksi terjadi dalam 6 jam ke depan</p>
+          </div>
+        </div>
+        <div class="alert info">
+          <i class="fas fa-info-circle"></i>
+          <div class="alert-content">
+            <h4>Rekomendasi Rute</h4>
+            <p>Rute alternatif tersedia untuk menghindari area gelombang tinggi</p>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="ocean-info-footer">
+      <p>&copy; 2024 OceanCare. All rights reserved.</p>
+      <p>Developed by OceanCare Team</p>
+  </div>
+  </main>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script type="text/javascript">
+    // Ganti inisialisasi peta dengan variabel baseLayers
+    let currentBaseLayer;
+    const map = L.map('map').setView([0.6981017325490867, 103.88942608515433], 7);
+    
+    // Definisikan layer-layer dasar
+    const baseLayers = {
+      streets: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }),
+      hybrid: L.layerGroup([
+        // Layer citra satelit
+        L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+          attribution: '© Esri'
+        }),
+        // Layer label jalan dan tempat
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager_only_labels/{z}/{x}/{y}{r}.png', {
+          attribution: '© CARTO'
+        })
+      ]),
+      terrain: L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenTopoMap'
+      })
+    };
+    // Fungsi untuk menampilkan popup dengan nama lokasi
+    async function showLocationPopup(lat, lon) {
+      try {
+        const cityName = await getCityFromCoordinates(lat, lon);
+        L.popup()
+          .setLatLng([lat, lon])
+          .setContent(`Lokasi: ${cityName}`)
+          .openOn(map);
+      } catch (error) {
+        console.error('Error fetching city name:', error);
+      }
+    }
+
+    // Tambahkan event listener ke peta untuk menampilkan popup saat diklik
+    map.on('click', function(e) {
+      const { lat, lng } = e.latlng;
+      showLocationPopup(lat, lng);
+    });
+    // Fungsi untuk mengubah layer peta
+    function changeMapLayer(layerName) {
+      if (currentBaseLayer) {
+        map.removeLayer(currentBaseLayer);
+      }
+      currentBaseLayer = baseLayers[layerName];
+      map.addLayer(currentBaseLayer);
+      
+      // Update status aktif pada tombol
+      document.querySelectorAll('.control-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      document.querySelector(`[onclick="changeMapLayer('${layerName}')"]`).classList.add('active');
+    }
+
+    // Set layer default ke streets
+    changeMapLayer('streets');
+    L.geoJSON(kapal).addTo(map);
+    </script>
+    <script>
+    // Konfigurasi OpenWeather API
+    const OPENWEATHER_API_KEY = '7739664bedc9ddba0afd796156570b03'; // Ganti dengan API key Anda
+    const JAKARTA_COORDINATES = {
+      lat: -6.123539754815979, 
+      lon: 106.14288064006905
+    };
+
+    // Fungsi untuk mengambil data cuaca dari OpenWeather
+    async function getOpenWeatherData() {
+      try {
+        const url = `https://api.openweathermap.org/data/2.5/weather?lat=${JAKARTA_COORDINATES.lat}&lon=${JAKARTA_COORDINATES.lon}&units=metric&appid=${OPENWEATHER_API_KEY}`;
+        
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Gagal mengambil data cuaca');
+        
+        const data = await response.json();
+        const cityName = await getCityFromCoordinates(JAKARTA_COORDINATES.lat, JAKARTA_COORDINATES.lon);
+        
+        // Update tampilan dengan menambahkan nama kota
+        const weatherData = parseWeatherData(data);
+        weatherData.cityName = cityName;
+        updateWeatherDisplay(weatherData);
+        
+      } catch (error) {
+        console.error('Error:', error);
+        showWeatherError();
+      }
+    }
+    
+    async function getCityFromCoordinates(lat, lon) {
+    try {
+        const url = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=${OPENWEATHER_API_KEY}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Gagal mengambil nama kota');
+
+        const data = await response.json();
+        return data[0]?.name || 'Lokasi tidak ditemukan';
+    } catch (error) {
+        console.error('Error:', error);
+        return 'Gagal mengambil nama kota';
+    }
+}
+
+    
+
+    function parseWeatherData(data) {
+      return {
+        temperature: Math.round(data.main.temp),
+        humidity: data.main.humidity,
+        windSpeed: (data.wind.speed * 1.944).toFixed(1), // Konversi m/s ke knot
+        windDirection: data.wind.deg,
+        weather: data.weather[0].id,
+        description: data.weather[0].description
+      };
+    }
+
+    function updateWeatherDisplay(data) {
+      const weatherCard = document.getElementById('weatherCard');
+      
+      // Update suhu dan kondisi
+      weatherCard.querySelector('.temp').textContent = `${data.temperature}°C`;
+      weatherCard.querySelector('.city').textContent = data.cityName; // Tambahkan nama kota
+      weatherCard.querySelector('.condition').textContent = getWeatherCondition(data.weather);
+      
+      // Update statistik cuaca
+      weatherCard.querySelector('.wind-speed span').textContent = `${data.windSpeed} knot`;
+      weatherCard.querySelector('.wind-direction span').textContent = getWindDirection(data.windDirection);
+      
+      // Tambahkan kelembaban
+      const weatherStats = weatherCard.querySelector('.weather-stats');
+      if (!weatherStats.querySelector('.humidity')) {
+        const humidityDiv = document.createElement('div');
+        humidityDiv.className = 'stat humidity';
+        humidityDiv.innerHTML = `
+          <i class="fas fa-tint"></i>
+          <span>${data.humidity}%</span>
+        `;
+        weatherStats.appendChild(humidityDiv);
+      } else {
+        weatherStats.querySelector('.humidity span').textContent = `${data.humidity}%`;
+      }
+      
+      // Update status loading
+      weatherCard.classList.remove('loading');
+    }
+
+    function getWeatherCondition(code) {
+      const conditions = {
+        200: 'Hujan Petir Ringan',
+        201: 'Hujan Petir',
+        202: 'Hujan Petir Lebat',
+        230: 'Hujan Petir Ringan',
+        231: 'Hujan Petir',
+        232: 'Hujan Petir Lebat',
+        300: 'Gerimis Ringan',
+        301: 'Gerimis',
+        302: 'Gerimis Lebat',
+        500: 'Hujan Ringan',
+        501: 'Hujan Sedang',
+        502: 'Hujan Lebat',
+        503: 'Hujan Sangat Lebat',
+        504: 'Hujan Ekstrem',
+        511: 'Hujan Dingin',
+        520: 'Hujan Ringan',
+        521: 'Hujan',
+        522: 'Hujan Lebat',
+        800: 'Cerah',
+        801: 'Berawan Sebagian',
+        802: 'Berawan',
+        803: 'Berawan Tebal',
+        804: 'Berawan Pekat'
+      };
+      return conditions[code] || 'Tidak Diketahui';
+    }
+
+    
+    // Update data user ketika update profil berhasil
+    document.addEventListener('updateProfileSuccess', () => {
+      getOpenWeatherData();
+    });
+    
+    function getWindDirection(degree) {
+      const directions = ['Utara', 'Timur laut', 'Timur', 'Tenggara', 'Selatan', 'Barat daya', 'Barat', 'Barat laut'];
+      const index = Math.round(((degree %= 360) < 0 ? degree + 360 : degree) / 45) % 8;
+      return directions[index];
+    }
+
+    function showWeatherError() {
+      const weatherCard = document.getElementById('weatherCard');
+      weatherCard.querySelector('.temp').textContent = '--°C';
+      weatherCard.querySelector('.condition').textContent = 'Gagal memuat data';
+      weatherCard.classList.add('error');
+    }
+
+    // Panggil fungsi saat halaman dimuat
+    document.addEventListener('DOMContentLoaded', () => {
+      getOpenWeatherData();
+      // Update setiap 30 menit
+      setInterval(getOpenWeatherData, 10 * 60 * 1000);
+    });
+
+    // Fungsi toggle panel profil
+    function toggleProfilePanel() {
+      const panel = document.getElementById('profilePanel');
+      const overlay = document.getElementById('overlay');
+      panel.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+
+    
+
+    function toggleLayer(layerName) {
+      console.log(`Toggling ${layerName} layer`);
+    }
+
+    // Update popup content dengan data baru
+    function createPopupContent(data) {
+        return `
+            <div class="popup-content">
+                <h4>Kualitas Air dan Udara</h4>
+                <div class="index-info" style="background-color: ${data.index.color};">
+                    <h5>Index MAQI: ${data.index.value.toFixed(1)}</h5>
+                    <p>Status: ${data.index.qualification}</p>
+                </div>
+                
+                <div class="pollutants-grid">
+                    <div class="pollutant-item" style="border-left: 4px solid ${data.pollutants.co.index.color}">
+                        <h6>CO (${data.pollutants.co.shortcode})</h6>
+                        <p>${data.pollutants.co.value} ${data.pollutants.co.unit}</p>
+                        <span class="quality">${data.pollutants.co.index.qualification}</span>
+                    </div>
+                    
+                    <div class="pollutant-item" style="border-left: 4px solid ${data.pollutants.no2.index.color}">
+                        <h6>NO₂ (${data.pollutants.no2.shortcode})</h6>
+                        <p>${data.pollutants.no2.value} ${data.pollutants.no2.unit}</p>
+                        <span class="quality">${data.pollutants.no2.index.qualification}</span>
+                    </div>
+                    
+                    <div class="pollutant-item" style="border-left: 4px solid ${data.pollutants.o3.index.color}">
+                        <h6>O₃ (${data.pollutants.o3.shortcode})</h6>
+                        <p>${data.pollutants.o3.value} ${data.pollutants.o3.unit}</p>
+                        <span class="quality">${data.pollutants.o3.index.qualification}</span>
+                    </div>
+                    
+                    <div class="pollutant-item" style="border-left: 4px solid ${data.pollutants.pm10.index.color}">
+                        <h6>PM10 (${data.pollutants.pm10.shortcode})</h6>
+                        <p>${data.pollutants.pm10.value} ${data.pollutants.pm10.unit}</p>
+                        <span class="quality">${data.pollutants.pm10.index.qualification}</span>
+                    </div>
+                </div>
+                
+                <div class="description">
+                    <p><i class="fas fa-info-circle"></i> ${data.index.description}</p>
+                </div>
+                
+                <div class="datetime">
+                    <small>Data per: ${new Date(data.datetime).toLocaleString()}</small>
+                </div>
+            </div>
+        `;
+    }
+
+    // Update event listener untuk klik pada peta
+    map.on('click', async function(e) {
+        const lat = e.latlng.lat;
+        const lng = e.latlng.lng;
+        
+        try {
+            const response = await fetch(`/api/water-quality?lat=${lat}&lng=${lng}`);
+            const data = await response.json();
+            
+            if (data.found) {
+                L.popup()
+                    .setLatLng(e.latlng)
+                    .setContent(createPopupContent(data))
+                    .openOn(map);
+            }
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    });
+    
+  </script>
+  <script src="/script.js"></script>
+</body>
+</html>

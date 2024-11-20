@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OceanCare</title>
+    <link rel="shortcut icon" href="/gambar/oceancare.png" type="image/x-icon">
+    <link rel="stylesheet" href="/edukasi.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <%- include('../template/header.ejs') %>
+    <%- include('../template/profil.ejs') %>
+
+    <!-- Main Content -->
+    <main class="education">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <h1>Edukasi Kelautan</h1>
+                <p>Mari pelajari dan jaga kekayaan laut kita untuk generasi mendatang</p>
+                <div class="quick-nav">
+                    <a href="#biodiversity">Keanekaragaman Hayati</a>
+                    <a href="#climate">Perubahan Iklim</a>
+                    <a href="#coral">Terumbu Karang</a>
+                    <a href="#pollution">Polusi Laut</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Sections -->
+        <div class="content-grid">
+            <!-- Biodiversity Section -->
+            <section id="biodiversity" class="info-card full-width">
+                <h2><i class="fas fa-fish"></i> Keanekaragaman Hayati Laut</h2>
+                <div class="card-content">
+                    
+                    <div class="text-content">
+                        <p class="highlight">Indonesia memiliki keanekaragaman hayati laut terbesar di dunia dengan lebih dari 3.000 spesies ikan.</p>
+                        <div class="detailed-content">
+                            <h3>Pentingnya Keanekaragaman Hayati</h3>
+                            <ul>
+                                <li>Menjaga keseimbangan ekosistem laut</li>
+                                <li>Sumber pangan dan ekonomi masyarakat pesisir</li>
+                                <li>Potensi pengembangan bioteknologi kelautan</li>
+                            </ul>
+                            
+                            <h3>Ancaman Utama</h3>
+                            <ul>
+                                <li>Penangkapan ikan berlebihan</li>
+                                <li>Kerusakan habitat</li>
+                                <li>Pencemaran laut</li>
+                            </ul>
+
+                            <h3>Upaya Perlindungan</h3>
+                            <ul>
+                                <li>Penetapan kawasan konservasi laut</li>
+                                <li>Pengaturan penangkapan ikan</li>
+                                <li>Program rehabilitasi habitat</li>
+                            </ul>
+                        </div>
+                        <div class="stats">
+                            <div class="stat-item">
+                                <span class="value">3,000+</span>
+                                <span class="label">Spesies Ikan</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="value">500+</span>
+                                <span class="label">Terumbu Karang</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="value">18%</span>
+                                <span class="label">Terumbu Dunia</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Climate Change Section -->
+            <section id="climate" class="info-card full-width">
+                <h2><i class="fas fa-temperature-high"></i> Dampak Perubahan Iklim</h2>
+                <div class="card-content">
+                    
+                    <div class="text-content">
+                        <p class="highlight">Perubahan iklim mengancam ekosistem laut melalui kenaikan suhu air dan pengasaman laut.</p>
+                        <div class="detailed-content">
+                            <h3>Dampak pada Ekosistem Laut</h3>
+                            <ul>
+                                <li>Pemutihan terumbu karang</li>
+                                <li>Perubahan pola migrasi ikan</li>
+                                <li>Kenaikan permukaan air laut</li>
+                            </ul>
+
+                            <h3>Solusi Mitigasi</h3>
+                            <ul>
+                                <li>Pengurangan emisi karbon</li>
+                                <li>Konservasi ekosistem pesisir</li>
+                                <li>Adaptasi masyarakat pesisir</li>
+                            </ul>
+
+                            <div class="monitoring-info">
+                                <h3>Pemantauan Data Laut</h3>
+                                <p class="highlight-secondary">OceanCare menyediakan dashboard pemantauan real-time untuk data kualitas air dan pH laut di berbagai wilayah.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Water Quality Section -->
+            <section id="water-quality" class="info-card full-width">
+                <h2><i class="fas fa-tint"></i> Kualitas Air Laut yang Ideal</h2>
+                <div class="card-content">
+                    
+                    <div class="text-content">
+                        <p class="highlight">Kualitas air laut yang sehat merupakan kunci utama bagi kelangsungan hidup ekosistem laut.</p>
+                        <div class="detailed-content">
+                            <h3>pH Air Laut</h3>
+                            <ul>
+                                <li>pH ideal: 8.1 hingga 8.3</li>
+                                <li>pH yang stabil penting untuk kehidupan terumbu karang</li>
+                                <li>Memengaruhi proses kimia di dalam laut</li>
+                            </ul>
+
+                            <div class="water-stats">
+                                <div class="stat-box ph">
+                                    <h4>Dampak pH Tidak Sehat</h4>
+                                    <ul>
+                                        <li>Kerusakan terumbu karang</li>
+                                        <li>Gangguan pembentukan kerangka organisme</li>
+                                        <li>Perubahan keseimbangan ekosistem</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3>Salinitas Air Laut</h3>
+                            <ul>
+                                <li>Salinitas ideal: 34-35 ppt (parts per thousand)</li>
+                                <li>Memengaruhi distribusi spesies laut</li>
+                                <li>Penting untuk kelangsungan hidup plankton</li>
+                            </ul>
+
+                            <div class="water-stats">
+                                <div class="stat-box salinity">
+                                    <h4>Dampak Salinitas Tidak Sehat</h4>
+                                    <ul>
+                                        <li>Stres pada biota laut</li>
+                                        <li>Migrasi tidak normal spesies</li>
+                                        <li>Risiko kematian massal</li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <h3>Indikator Kualitas Air yang Baik</h3>
+                            <ul>
+                                <li>Air transparan dan jernih</li>
+                                <li>Kadar oksigen terlarut yang cukup</li>
+                                <li>Bebas dari limbah dan polutan</li>
+                                <li>Keseimbangan nutrisi yang baik</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Ocean Care Info Section -->
+            <section id="ocean-care-info" class="info-card full-width">
+                <h2><i class="fas fa-info-circle"></i> Mengapa Informasi Ini Penting di OceanCare?</h2>
+                <div class="card-content">
+                    <div class="text-content">
+                        <p class="highlight">Pemahaman tentang kondisi laut adalah langkah pertama dalam upaya perlindungan ekosistem laut.</p>
+                        <div class="detailed-content">
+                            <div class="info-box">
+                                <h3>Manfaat Informasi</h3>
+                                <ul>
+                                    <li>Memahami faktor yang mempengaruhi kondisi laut</li>
+                                    <li>Mengetahui cara berkontribusi dalam menjaga kesehatan ekosistem</li>
+                                    <li>Meningkatkan kesadaran akan pentingnya menjaga kualitas air laut</li>
+                                </ul>
+                            </div>
+
+                            <div class="info-box dashboard">
+                                <h3>Fitur Dashboard Pemantauan</h3>
+                                <ul>
+                                    <li>Data aktual kualitas air dan pH laut</li>
+                                    <li>Pemantauan perubahan di berbagai wilayah</li>
+                                    <li>Visualisasi data untuk pemahaman lebih baik</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Coral Conservation Section -->
+            <section id="coral" class="info-card">
+                <!-- Similar structure -->
+            </section>
+
+            <!-- Marine Pollution Section -->
+            <section id="pollution" class="info-card">
+                <!-- Similar structure -->
+            </section>
+        </div>
+
+        <!-- Community Section -->
+        <section class="community-section">
+            <h2>Bergabung dengan Komunitas</h2>
+            <p>Jadilah bagian dari perubahan untuk laut yang lebih baik</p>
+            <a href="/auth/komunitas"><button class="join-btn">Gabung Sekarang</button></a>
+        </section>
+    </main>
+
+    <script>
+        function toggleProfilePanel() {
+            const panel = document.getElementById('profilePanel');
+            const overlay = document.getElementById('overlay');
+            panel.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<div id="profilePanel" class="profile-panel">
+    <div class="panel-header">
+      <h3>Profil Saya</h3>
+      <button onclick="toggleProfilePanel()" class="close-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="profile-avatar">
+      <img src='<%= user.gambar || "/gambar/openocean.png" %>' alt="Profile" class="profile-img">
+      
+    </div>
+
+    <div class="profile-info">
+      <!-- Mode Tampilan -->
+      <div id="viewMode">
+        <table>
+          <tr>
+            <th>Nama</th>
+            <td><%= user.nama || '-' %></td>
+          </tr>
+          <tr>
+            <th>No. Telepon</th>
+            <td><%= user.telepon || '-' %></td>
+          </tr>
+          <tr>
+            <th>Email</th>
+            <td><%= user.email || '-' %></td>
+          </tr>
+        </table>
+        <a href="/auth/editprofil" class="edit-profile-btn">
+          <i class="fas fa-edit"></i> Edit Profil
+        </a>
+      </div>
+    </div>
+    
+    <div class="profile-actions">
+      <a href="/auth/logout" class="logout-btn">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </a>
+    </div>
+  </div>

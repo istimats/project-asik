@@ -1,0 +1,167 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  background-color: #0d1b2a;
+  color: #ffffff;
+  line-height: 1.6;
+}
+
+
+.logo img {
+  width: 80px; 
+  height: 80px;
+  object-fit: contain;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 5%;
+  background-color: #0d1b2a;
+  position: fixed;
+  width: 100%;
+  z-index: 100;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+  font-size: 1.8em;
+  font-weight: bold;
+  background: linear-gradient(45deg, #4dabf7, #56ccf2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.navigation a {
+  color: #ffffff;
+  margin: 0 15px;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 500;
+}
+
+.navigation a:hover {
+  color: #4dabf7;
+}
+
+.hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 120px 5% 50px;
+  gap: 40px;
+}
+
+.hero-image {
+  width: 50%;
+}
+
+.hero-image img {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.hero-text h1 {
+  font-size: 2.5em;
+  margin-bottom: 25px;
+  line-height: 1.3;
+  background: linear-gradient(45deg, #4dabf7, #56ccf2);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.featured-ecosystems {
+  padding: 50px 5%;
+  text-align: center;
+}
+
+.featured-ecosystems h2 {
+  font-size: 2em;
+  margin-bottom: 30px;
+}
+
+.ecosystem-grid {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ecosystem-item {
+  background-color: #1e2a38;
+  padding: 15px;
+  border-radius: 15px;
+  width: 250px;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.ecosystem-item:hover {
+  transform: translateY(-5px);
+}
+
+.ecosystem-item img {
+  width: 100%;
+  height: 180px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 15px;
+}
+
+.website-description {
+  margin-top: 20px;
+  background: rgba(30, 42, 56, 0.8);
+  padding: 20px;
+  border-radius: 15px;
+  border-left: 4px solid #4dabf7;
+}
+
+.website-description p {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+  color: #ffffff;
+}
+
+.website-description ul {
+  list-style: none;
+  padding: 0;
+}
+
+.website-description li {
+  margin: 12px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1em;
+  color: #a8b2d1;
+}
+
+.website-description i {
+  color: #4dabf7;
+  width: 24px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+      flex-direction: column;
+      text-align: center;
+  }
+
+  .hero-image {
+      width: 100%;
+  }
+
+  .website-description li {
+      justify-content: center;
+  }
+}

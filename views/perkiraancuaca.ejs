@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prakiraan Cuaca - OceanCare</title>
+    <link rel="stylesheet" href="/perkiraancuaca.css">
+    <link rel="shortcut icon" href="/gambar/oceancare.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <%- include('../template/header.ejs') %>
+    <%- include('../template/profil.ejs') %>
+    
+    <main class="dashboard">
+        <div class="weather-container">
+            <div class="current-weather info-card">
+                <h3><i class="fas fa-cloud-sun"></i> Cuaca Saat Ini</h3>
+                <div class="weather-details">
+                    <div class="weather-main">
+                        <span class="temp">--°C</span>
+                        <span class="city">Loading...</span>
+                        <span class="condition">Loading...</span>
+                    </div>
+                    <div class="weather-stats">
+                        <div class="stat">
+                            <i class="fas fa-wind"></i>
+                            <span class="wind">-- km/h</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-compass"></i>
+                            <span class="direction">--</span>
+                        </div>
+                        <div class="stat">
+                            <i class="fas fa-tint"></i>
+                            <span class="humidity">--%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="forecast-table info-card">
+                <h3><i class="fas fa-calendar-alt"></i> Prakiraan 5 Hari Kedepan</h3>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Tanggal</th>
+                                <th>Cuaca</th>
+                                <th>Suhu</th>
+                                <th>Kelembaban</th>
+                                <th>Angin</th>
+                                <th>Arah Angin</th>
+                            </tr>
+                        </thead>
+                        <tbody id="forecastData">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const API_KEY = '7739664bedc9ddba0afd796156570b03';
+        const CITY_COORDS = {
+            lat: -6.123539754815979,
+            lon: 106.14288064006905
+        };
+
+        // Fetch current weather
+        async function getCurrentWeather() {
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${CITY_COORDS.lat}&lon=${CITY_COORDS.lon}&units=metric&appid=${API_KEY}`);
+                const data = await response.json();
+                
+                document.querySelector('.temp').textContent = `${Math.round(data.main.temp)}°C`;
+                document.querySelector('.city').textContent = data.name;
+                document.querySelector('.condition').textContent = getWeatherCondition(data.weather[0].id);
+                document.querySelector('.wind').textContent = `${(data.wind.speed * 3.6).toFixed(1)} km/h`;
+                document.querySelector('.direction').textContent = getWindDirection(data.wind.deg);
+                document.querySelector('.humidity').textContent = `${data.main.humidity}%`;
+            } catch (error) {
+                console.error('Error fetching current weather:', error);
+            }
+        }
+
+        // Fetch 5-day forecast
+        async function getForecast() {
+            try {
+                const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?lat=${CITY_COORDS.lat}&lon=${CITY_COORDS.lon}&units=metric&appid=${API_KEY}`);
+                const data = await response.json();
+                
+                const tbody = document.getElementById('forecastData');
+                tbody.innerHTML = '';
+
+                // Filter untuk mendapatkan data per hari (setiap 24 jam)
+                const dailyData = data.list.filter((reading, index) => index % 8 === 0);
+
+                dailyData.forEach(day => {
+                    const date = new Date(day.dt * 1000);
+                    const row = document.createElement('tr');
+                    
+                    row.innerHTML = `
+                        <td>${formatDate(date)}</td>
+                        <td>
+                            <div class="weather-icon">
+                                <img src="http://openweathermap.org/img/w/${day.weather[0].icon}.png" alt="weather icon">
+                                ${getWeatherCondition(day.weather[0].id)}
+                            </div>
+                        </td>
+                        <td>${Math.round(day.main.temp)}°C</td>
+                        <td>${day.main.humidity}%</td>
+                        <td>${(day.wind.speed * 3.6).toFixed(1)} km/h</td>
+                        <td>${getWindDirection(day.wind.deg)}</td>
+                    `;
+                    
+                    tbody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Error fetching forecast:', error);
+            }
+        }
+
+        // Helper functions
+        function formatDate(date) {
+            const options = { weekday: 'long', day: 'numeric', month: 'long' };
+            return date.toLocaleDateString('id-ID', options);
+        }
+
+        function getWindDirection(degree) {
+            const directions = ['Utara', 'Timur laut', 'Timur', 'Tenggara', 'Selatan', 'Barat daya', 'Barat', 'Barat laut'];
+            return directions[Math.round(degree / 45) % 8];
+        }
+
+        function getWeatherCondition(code) {
+            const conditions = {
+                200: 'Hujan Petir Ringan',
+                201: 'Hujan Petir',
+                202: 'Hujan Petir Lebat',
+                230: 'Hujan Petir Ringan',
+                231: 'Hujan Petir',
+                232: 'Hujan Petir Lebat',
+                300: 'Gerimis Ringan',
+                301: 'Gerimis',
+                302: 'Gerimis Lebat',
+                500: 'Hujan Ringan',
+                501: 'Hujan Sedang',
+                502: 'Hujan Lebat',
+                503: 'Hujan Sangat Lebat',
+                504: 'Hujan Ekstrem',
+                511: 'Hujan Dingin',
+                520: 'Hujan Ringan',
+                521: 'Hujan',
+                522: 'Hujan Lebat',
+                800: 'Cerah',
+                801: 'Berawan Sebagian',
+                802: 'Berawan',
+                803: 'Berawan Tebal',
+                804: 'Berawan Pekat'
+            };
+            return conditions[code] || 'Tidak Diketahui';
+        }
+        function toggleProfilePanel() {
+      const panel = document.getElementById('profilePanel');
+      const overlay = document.getElementById('overlay');
+      panel.classList.toggle('active');
+      overlay.classList.toggle('active');
+    }
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            getCurrentWeather();
+            getForecast();
+            // Update every 30 minutes
+            setInterval(() => {
+                getCurrentWeather();
+                getForecast();
+            }, 30 * 60 * 1000);
+        });
+    </script>
+</body>
+</html>

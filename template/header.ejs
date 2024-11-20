@@ -1,0 +1,19 @@
+<header class="navbar">
+    <div class="logo">
+        <img src="/gambar/oceancare.png" alt="OceanCare Logo" class="logo-img">
+       
+    </div>
+    <nav>
+      <a href="/auth/beranda" class="active">Dashboard</a>
+      <a href="/auth/perkiraancuaca">Prakiraan Cuaca</a>
+      <a href="/auth/edukasi">Edukasi</a>
+      <a href="/auth/komunitas">Komunitas</a>
+    </nav>
+    <div class="profile-section">
+      <div class="profile-dropdown" onclick="toggleProfilePanel()">
+        <img src='<%= user.gambar || "/gambar/openocean.png" %>' alt="Profile" class="profile-img">
+        <span class="profile-name"><%= user.nama %></span>
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </div>
+  </header>

@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OceanCare - Komunitas</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin />
+    <link rel="shortcut icon" href="/gambar/oceancare.png" type="image/x-icon">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" />
+    <link rel="stylesheet" href="/komunitas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="root-container">
+        <%- include('../template/header.ejs') %>
+        <%- include('../template/profil.ejs') %>
+        <!-- Main Content -->
+        <div class="main-container">
+
+            <!-- Main Content Area -->
+            <main class="content">
+                <div class="content-header">
+                    <div class="header-text">
+                        <h1>OceanCare Community</h1>
+                        <p>Discuss and Share Knowledge About Marine Ecosystems</p>
+                    </div>
+                </div>
+
+                <!-- Navigation Tabs -->
+                <nav class="content-tabs">
+                    <a href="#" class="tab active">Popular Topics</a>
+                    <a href="#" class="tab">Recent Discussions</a>
+                    <a href="#" class="tab">Followed Topics</a>
+                </nav>
+
+                <!-- Search Discussion -->
+                <div class="discussion-search">
+                    <div class="search-icon">
+                        <!-- Icon search akan ditambahkan di sini -->
+                    </div>
+                    <input type="text" placeholder="Search for discussions" class="search-input">
+                </div>
+
+                <!-- Categories -->
+                <div class="categories">
+                    <span class="category-tag">All Categories</span>
+                    <span class="category-tag">Water Quality</span>
+                    <span class="category-tag">Marine Life</span>
+                    <span class="category-tag">Coral Reef Conservation</span>
+                    <span class="category-tag">Marine Education</span>
+                </div>
+
+                <!-- Discussion List -->
+                <div class="discussion-list">
+                    <% diskusi.forEach(function(item) { %>
+                        <div class="discussion-item">
+                            <div class="discussion-content">
+                                <h3><%= item.judul %></h3>
+                                <p class="discussion-meta">
+                                    Oleh: <%= item.username %> | 
+                                    <%= new Date(item.created_at).toLocaleDateString() %> |
+                                    <%= item.jumlah_komentar %> komentar
+                                </p>
+                                <p class="discussion-excerpt"><%= item.konten %></p>
+                                
+                                <!-- Tombol untuk menampilkan komentar -->
+                                <button class="btn btn-secondary show-comments-btn" 
+                                        onclick="toggleComments('<%= item.id %>')">
+                                    <i class="fas fa-comments"></i> Lihat Komentar
+                                </button>
+
+                                <!-- Bagian Komentar -->
+                                <div id="comments-<%= item.id %>" class="comments-section" style="display: none;">
+                                    <div class="comments-container" id="comments-container-<%= item.id %>">
+                                        <!-- Komentar akan dimuat di sini -->
+                                    </div>
+
+                                    <!-- Form Komentar dengan method POST -->
+                                    <div class="comment-form-container">
+                                        <form action="/auth/diskusi/<%= item.id %>/komentar" method="POST" class="comment-form">
+                                            <textarea 
+                                                name="konten" 
+                                                placeholder="Tulis komentar Anda..." 
+                                                required
+                                            ></textarea>
+                                            <button type="submit" class="btn btn-primary">
+                                                <i class="fas fa-paper-plane"></i> Kirim
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <!-- New Discussion Modal -->
+                <div id="newDiscussionModal" class="modal">
+                    <div class="modal-content">
+                        <h2>Mulai Diskusi Baru</h2>
+                        <form action="/auth/diskusi/baru" method="POST">
+                            <div class="form-group">
+                                <label for="judul">Judul</label>
+                                <input type="text" id="judul" name="judul" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="kategori">Kategori</label>
+                                <select id="kategori" name="kategori" required>
+                                    <option value="Water Quality">Water Quality</option>
+                                    <option value="Marine Life">Marine Life</option>
+                                    <option value="Coral Reef Conservation">Coral Reef Conservation</option>
+                                    <option value="Marine Education">Marine Education</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="konten">Konten</label>
+                                <textarea id="konten" name="konten" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Posting Diskusi</button>
+                            <button type="button" class="btn btn-secondary" onclick="closeModal()">Batal</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Update the New Discussion Button -->
+                <div class="new-discussion">
+                    <button class="btn btn-primary btn-full" onclick="openModal()">Mulai Diskusi Baru</button>
+                </div>
+
+                <!-- Add JavaScript for modal functionality -->
+                <script>
+                    function openModal() {
+                        document.getElementById('newDiscussionModal').style.display = 'block';
+                    }
+
+                    function closeModal() {
+                        document.getElementById('newDiscussionModal').style.display = 'none';
+                    }
+                </script>
+            </main>
+        </div>
+    </div>
+
+    <!-- Profile Panel -->
+    
+
+    <script>
+        function toggleProfilePanel() {
+            const panel = document.getElementById('profilePanel');
+            const overlay = document.getElementById('overlay');
+            panel.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+    </script>
+
+    <!-- Tambahkan script di bagian bawah file, sebelum </body> -->
+    <script>
+        
+    async function toggleComments(diskusiId) {
+        const commentsSection = document.getElementById(`comments-${diskusiId}`);
+        
+        if (commentsSection.style.display === 'none') {
+            commentsSection.style.display = 'block';
+            await loadComments(diskusiId);
+        } else {
+            commentsSection.style.display = 'none';
+        }
+    }
+
+    async function loadComments(diskusiId) {
+        const commentsContainer = document.getElementById(`comments-container-${diskusiId}`);
+        commentsContainer.innerHTML = '<div class="loading"><i class="fas fa-spinner fa-spin"></i> Memuat komentar...</div>';
+        
+        try {
+            const response = await fetch(`/auth/diskusi/${diskusiId}/komentar`);
+            const comments = await response.json();
+            
+            if (comments.length === 0) {
+                commentsContainer.innerHTML = '<div class="no-comments">Belum ada komentar. Jadilah yang pertama!</div>';
+                return;
+            }
+            
+            commentsContainer.innerHTML = comments.map(comment => `
+                <div class="comment">
+                    <div class="comment-header">
+                        <span class="comment-author">
+                            <i class="fas fa-user"></i> ${comment.username}
+                        </span>
+                        <span class="comment-date">
+                            <i class="fas fa-clock"></i> ${new Date(comment.created_at).toLocaleString()}
+                        </span>
+                    </div>
+                    <div class="comment-content">${comment.konten}</div>
+                </div>
+            `).join('');
+        } catch (error) {
+            console.error('Error loading comments:', error);
+            commentsContainer.innerHTML = '<div class="error">Gagal memuat komentar</div>';
+        }
+    }
+    </script>
+</body>
+</html>

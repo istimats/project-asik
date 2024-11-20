@@ -1,0 +1,120 @@
+{
+    "found": true,
+    "datetime": "2024-11-19T15:00:00.000Z",
+    "index": {
+        "index_type": "meersens",
+        "index_name": "MAQI",
+        "qualification": "Medium",
+        "icon": null,
+        "color": "#ff851b",
+        "description": "Air quality level will present a risk for health for an exposure time superior to some hours",
+        "value": 50.18,
+        "main_pollutants": [
+            "no2"
+        ]
+    },
+    "pollutants": {
+        "co": {
+            "shortcode": "CO",
+            "name": "Carbon monoxide",
+            "unit": "µg/m³",
+            "found": true,
+            "value": 165.1,
+            "confidence": 5,
+            "index": {
+                "index_type": "meersens",
+                "index_name": "MAQI",
+                "qualification": "Perfect",
+                "icon": null,
+                "color": "#066b78",
+                "description": "Air quality level won’t present a risk for health for an exposure time superior to decades",
+                "value": 0.4
+            }
+        },
+        "no2": {
+            "shortcode": "NO2",
+            "name": "Nitrogen dioxide",
+            "unit": "µg/m³",
+            "found": true,
+            "value": 26.9,
+            "confidence": 5,
+            "index": {
+                "index_type": "meersens",
+                "index_name": "MAQI",
+                "qualification": "Medium",
+                "icon": null,
+                "color": "#ff851b",
+                "description": "Air quality level will present a risk for health for an exposure time superior to some hours",
+                "value": 50.18
+            }
+        },
+        "o3": {
+            "shortcode": "O3",
+            "name": "Ozone",
+            "unit": "µg/m³",
+            "found": true,
+            "value": 46.4,
+            "confidence": 5,
+            "index": {
+                "index_type": "meersens",
+                "index_name": "MAQI",
+                "qualification": "Good",
+                "icon": null,
+                "color": "#09b24a",
+                "description": "Air quality level will present a risk for health for an exposure time superior to one or several year(s)",
+                "value": 26.79
+            }
+        },
+        "pm10": {
+            "shortcode": "PM10",
+            "name": "Particulate matter 10",
+            "unit": "µg/m³",
+            "found": true,
+            "value": 7.6,
+            "confidence": 5,
+            "index": {
+                "index_type": "meersens",
+                "index_name": "MAQI",
+                "qualification": "Very good",
+                "icon": null,
+                "color": "#0074d9",
+                "description": "Air quality level won’t present a risk for health for an exposure time superior to decades",
+                "value": 13.4
+            }
+        },
+        "pm25": {
+            "shortcode": "PM2.5",
+            "name": "Particulate matter 2.5",
+            "unit": "µg/m³",
+            "found": true,
+            "value": 3.3,
+            "confidence": 5,
+            "index": {
+                "index_type": "meersens",
+                "index_name": "MAQI",
+                "qualification": "Good",
+                "icon": null,
+                "color": "#09b24a",
+                "description": "Air quality level will present a risk for health for an exposure time superior to one or several year(s)",
+                "value": 23.89
+            }
+        },
+        "so2": {
+            "shortcode": "SO2",
+            "name": "Sulfur dioxide",
+            "unit": "µg/m³",
+            "found": true,
+            "value": 1.5,
+            "confidence": 5,
+            "index": {
+                "index_type": "meersens",
+                "index_name": "MAQI",
+                "qualification": "Perfect",
+                "icon": null,
+                "color": "#066b78",
+                "description": "Air quality level won’t present a risk for health for an exposure time superior to decades",
+                "value": 2.54
+            }
+        }
+    }
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profil - OceanCare</title>
+    <link rel="stylesheet" href="/editprofil.css">
+    <link rel="shortcut icon" href="/gambar/oceancare.png" type="image/x-icon">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="edit-profile-card">
+            <div class="card-header">
+                <h2><i class="fas fa-user-edit"></i> Edit Profil</h2>
+                <a href="/auth/beranda" class="back-btn">
+                    <i class="fas fa-times"></i>
+                </a>
+            </div>
+
+            <div class="profile-avatar">
+                <img src="<%= user.gambar || '/gambar/openocean.png' %>" alt="Profile" id="avatarPreview">
+                <div class="avatar-upload">
+                    <label for="gambar" class="upload-btn">
+                        <i class="fas fa-camera"></i>
+                    </label>
+                    <input type="file" id="gambar" name="gambar" accept="image/*" style="display: none;">
+                </div>
+            </div>
+
+            <form id="editProfileForm" class="edit-form" action="/auth/updateprofil" method="POST" enctype="multipart/form-data">
+                <input type="hidden" name="userId" value="<%= user.id %>">
+                <input type="file" id="formGambar" name="gambar" style="display: none;">
+                <div class="form-group">
+                    <label for="nama">
+                        <i class="fas fa-user"></i> Nama Lengkap
+                    </label>
+                    <input type="text" id="nama" name="nama" value="<%= user.nama %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">
+                        <i class="fas fa-envelope"></i> Email
+                    </label>
+                    <input type="email" id="email" name="email" value="<%= user.email %>" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telepon">
+                        <i class="fas fa-phone"></i> Nomor Telepon
+                    </label>
+                    <input type="tel" id="telepon" name="telepon" value="<%= user.telepon %>" required
+                           pattern="[0-9]{10,13}" title="Masukkan nomor telepon yang valid (10-13 digit)">
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" class="save-btn">
+                        <i class="fas fa-save"></i> Simpan Perubahan
+                    </button>
+                    <a href="/auth/beranda" class="cancel-btn">
+                        <i class="fas fa-times"></i> Batal
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const gambarInput = document.getElementById('gambar');
+        const formGambar = document.getElementById('formGambar');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const form = document.getElementById('editProfileForm');
+
+        gambarInput.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                // Validasi ukuran file (maksimal 2MB)
+                if (file.size > 4 * 2048 * 2048) {
+                    alert('Ukuran file terlalu besar. Maksimal 2MB');
+                    gambarInput.value = '';
+                    return;
+                }
+
+                // Validasi tipe file
+                if (!file.type.startsWith('image/')) {
+                    alert('File harus berupa gambar');
+                    gambarInput.value = '';
+                    return;
+                }
+
+                // Preview gambar
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    avatarPreview.src = e.target.result;
+                }
+                reader.readAsDataURL(file);
+
+                // Copy file ke input form
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                formGambar.files = dataTransfer.files;
+            }
+        });
+
+        // Form validation
+        form.addEventListener('submit', function(e) {
+            const telepon = document.getElementById('telepon');
+            const email = document.getElementById('email');
+            const nama = document.getElementById('nama');
+
+            // Validasi nama
+            if (nama.value.trim().length < 3) {
+                e.preventDefault();
+                alert('Nama harus minimal 3 karakter!');
+                return;
+            }
+
+            // Validasi nomor telepon
+            if (!/^[0-9]{10,13}$/.test(telepon.value)) {
+                e.preventDefault();
+                alert('Nomor telepon harus terdiri dari 10-13 digit angka!');
+                return;
+            }
+
+            // Validasi email
+            if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
+                e.preventDefault();
+                alert('Format email tidak valid!');
+                return;
+            }
+        });
+    </script>
+</body>
+</html>
