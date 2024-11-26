@@ -11,5 +11,10 @@
             "src": "/(.*)",
             "dest": "package.json"
         }
-    ]
+    ],
+    
+        
+        "rewrites": [{ "source": "/(.*)", "destination": "/" }]
+    
+
 }
