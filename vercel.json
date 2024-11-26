@@ -2,5 +2,5 @@
 
 {
 	"version": 2,
-	"rewrites": [{ "source": "/(.*)", "destination": "/auth/landing" }]
+	"rewrites": [{ "source": "/(.*)", "destination": "/index.js" }]
 }
